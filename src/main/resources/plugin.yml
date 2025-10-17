@@ -1,0 +1,18 @@
+name: MobIgnore
+version: '1.0.0'
+main: com.flyaway.mobignore.MobIgnore
+api-version: '1.21'
+description: Плагин для игнорирования мобов
+author: FlyAwayMaking
+website: https://github.com/flyawaymaking
+
+commands:
+  mobignore:
+    description: Включить/выключить игнорирование мобов
+    usage: /<command>
+    permission: mobignore.use
+
+permissions:
+  mobignore.use:
+    description: Разрешает использовать команду mobignore
+    default: op
