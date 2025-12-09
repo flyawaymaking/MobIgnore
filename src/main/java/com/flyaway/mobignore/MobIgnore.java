@@ -1,11 +1,11 @@
 package com.flyaway.mobignore;
 
-import io.papermc.paper.plugin.bootstrap.PluginBootstrap;
-import io.papermc.paper.plugin.bootstrap.PluginProviderContext;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,10 +17,19 @@ import java.util.HashSet;
 import java.util.UUID;
 
 public class MobIgnore extends JavaPlugin implements Listener {
+
     private final HashSet<UUID> ignoredPlayers = new HashSet<>();
+    private MiniMessage mm;
+
+    private int targetClearRadius;
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+        mm = MiniMessage.miniMessage();
+
+        targetClearRadius = getConfig().getInt("target-clear-radius", 32);
+
         getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("MobIgnore включён!");
     }
@@ -30,37 +39,44 @@ public class MobIgnore extends JavaPlugin implements Listener {
         getLogger().info("MobIgnore выключен!");
     }
 
+    private void msg(CommandSender sender, String path) {
+        String raw = getConfig().getString("messages." + path, "<red>Not found message: " + path);
+        sender.sendMessage(mm.deserialize(raw));
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
+            msg(sender, "player-only");
             sender.sendMessage("Эту команду можно использовать только в игре!");
             return true;
         }
 
-        Player player = (Player) sender;
         if (!player.hasPermission("mobignore.use")) {
-            player.sendMessage("У тебя нет прав использовать эту команду.");
+            msg(player, "no-permission");
             return true;
         }
 
         if (ignoredPlayers.contains(player.getUniqueId())) {
             ignoredPlayers.remove(player.getUniqueId());
-            player.sendMessage("§eМобы снова могут нападать на тебя.");
+            msg(player, "enabled-mobs-attack");
         } else {
             ignoredPlayers.add(player.getUniqueId());
-            // Сбрасываем все текущие цели на этого игрока
+
             clearTargetsForPlayer(player);
-            player.sendMessage("§aТеперь мобы будут тебя игнорировать!");
+
+            msg(player, "ignore-enabled");
         }
+
         return true;
     }
 
     @EventHandler
     public void onEntityTarget(EntityTargetEvent event) {
-        if (event.getTarget() instanceof Player) {
-            Player player = (Player) event.getTarget();
+        if (event.getEntity() instanceof ExperienceOrb) return;
+
+        if (event.getTarget() instanceof Player player) {
             if (ignoredPlayers.contains(player.getUniqueId())) {
-                // Если игрок в "игноре", то мобы не могут его атаковать
                 if (event.getEntityType() != EntityType.PLAYER) {
                     event.setCancelled(true);
                 }
@@ -68,16 +84,9 @@ public class MobIgnore extends JavaPlugin implements Listener {
         }
     }
 
-    /**
-     * Сбрасывает цели всех мобов, которые нацелены на конкретного игрока
-     */
     private void clearTargetsForPlayer(Player player) {
-        // Ищем мобов в радиусе 32 блоков от игрока
-        for (Entity entity : player.getNearbyEntities(32, 32, 32)) {
-            if (entity instanceof Mob) {
-                Mob mob = (Mob) entity;
-
-                // Проверяем, нацелен ли моб на этого игрока
+        for (Entity entity : player.getNearbyEntities(targetClearRadius, targetClearRadius, targetClearRadius)) {
+            if (entity instanceof Mob mob) {
                 if (mob.getTarget() != null && mob.getTarget().getUniqueId().equals(player.getUniqueId())) {
                     mob.setTarget(null);
                 }

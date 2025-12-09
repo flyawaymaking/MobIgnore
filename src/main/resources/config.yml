@@ -1,0 +1,8 @@
+# Радиус очистки целей мобов
+target-clear-radius: 32
+
+messages:
+  player-only: "<red>Эта команда только для игроков!"
+  no-permission: "<red>У тебя нет прав использовать эту команду."
+  enabled-mobs-attack: "<yellow>Мобы снова могут нападать на тебя."
+  ignore-enabled: "<green>Теперь мобы будут тебя игнорировать!"
