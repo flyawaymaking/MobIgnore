@@ -1,5 +1,5 @@
 name: MobIgnore
-version: '1.1.0'
+version: '1.2.0'
 main: com.flyaway.mobignore.MobIgnore
 api-version: '1.21'
 description: Плагин для игнорирования мобов
