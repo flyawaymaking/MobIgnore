@@ -48,7 +48,6 @@ public class MobIgnore extends JavaPlugin implements Listener {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
             msg(sender, "player-only");
-            sender.sendMessage("Эту команду можно использовать только в игре!");
             return true;
         }
 
