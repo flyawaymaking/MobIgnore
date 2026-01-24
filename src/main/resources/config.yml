@@ -1,8 +1,17 @@
-# Радиус очистки целей мобов
+# Не изменяйте это значение
+config-version: 1
+
+# Радиус очистки целей у мобов
 target-clear-radius: 32
 
+placeholders:
+  enabled: "&aВКЛ"
+  disabled: "&cВЫКЛ"
+
+# Поддерживает MiniMessages форматы
 messages:
   player-only: "<red>Эта команда только для игроков!"
   no-permission: "<red>У тебя нет прав использовать эту команду."
   enabled-mobs-attack: "<yellow>Мобы снова могут нападать на тебя."
   ignore-enabled: "<green>Теперь мобы будут тебя игнорировать!"
+  reloaded: "<green>Конфиг успешно перезагружен."
