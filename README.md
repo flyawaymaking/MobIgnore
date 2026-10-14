@@ -1,5 +1,8 @@
 # MobIgnore
 
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/mobignore?logo=modrinth&label=downloads&color=1bd96a)](https://modrinth.com/plugin/mobignore)
+[![Modrinth Followers](https://img.shields.io/modrinth/followers/mobignore?logo=modrinth&label=followers&color=1bd96a)](https://modrinth.com/plugin/mobignore)
+
 MobIgnore — лёгкий плагин для серверов Minecraft на Paper, который позволяет игрокам временно отключать агрессию мобов по отношению к себе. Идеально для строительства, исследования или просто спокойной игры.
 
 ## 🧩 Совместимость с версиями
